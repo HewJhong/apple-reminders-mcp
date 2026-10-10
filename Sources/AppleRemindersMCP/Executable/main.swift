@@ -14,7 +14,10 @@ struct Main {
         LoggingSupport.bootstrap()
         let logger = LoggingSupport.makeLogger()
         let app = AppleRemindersServer(dependencies: .live(), logger: logger)
-        let transport = StdioTransport(logger: logger)
+        let transport = CodexCompatibilityTransport(
+            upstream: StdioTransport(logger: logger),
+            logger: logger
+        )
 
         try await app.start(transport: transport)
 
