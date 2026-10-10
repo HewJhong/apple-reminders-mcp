@@ -61,11 +61,13 @@ public actor CodexCompatibilityTransport: Transport {
 
         guard var params = message["params"] as? [String: Any],
             var capabilities = params["capabilities"] as? [String: Any],
-            capabilities.removeValue(forKey: "experimental") != nil
+            let experimental = capabilities["experimental"],
+            experimental as? [String: String] == nil
         else {
             return data
         }
 
+        capabilities.removeValue(forKey: "experimental")
         params["capabilities"] = capabilities
         message["params"] = params
         return (try? JSONSerialization.data(withJSONObject: message)) ?? data
